@@ -5,7 +5,7 @@ const logger = require('../logger');
 
 
 router.get('/', async (req, res) => {
-    
+
     try {
         // Task 1: Connect to MongoDB and store connection to db constant
         const db = await connectToDatabase();
@@ -56,8 +56,8 @@ router.post('/', async (req, res, next) => {
         const db = await connectToDatabase();
         const collection = db.collection("gifts");
         const gift = await collection.insertOne(req.body);
-        if(gift.acknowledged)
-            res.status(201).json({message:"Gift added Successfully"});
+        if (gift.acknowledged)
+            res.status(201).json({ message: "Gift added Successfully" });
         else
             res.status(500).send('Internal Server Error');
     } catch (e) {
