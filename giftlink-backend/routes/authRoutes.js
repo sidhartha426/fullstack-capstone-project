@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
         //Task 3: Check for existing email
         const existingEmail = await collection.findOne({ email: req.body.email });
         if (existingEmail) {
-            res.status(409).json({ message: "User already exists." });
+            res.status(409).json({ error: "User already exists." });
             return;
         }
 

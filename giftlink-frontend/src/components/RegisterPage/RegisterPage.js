@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { urlConfig } from '../../config';
+import { useAppContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 import './RegisterPage.css';
 
@@ -9,12 +12,40 @@ function RegisterPage() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showerr, setShowerr] = useState('');
+
+    const navigate = useNavigate();
+    const { setIsLoggedIn } = useAppContext();
 
     // insert code here to create handleRegister function and include console.log
 
     const handleRegister = async (e) => {
-        e.preventDefault();
-        console.log("Register invoked");
+        try {
+            const response = await fetch(`${urlConfig.backendUrl}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({ firstName, lastName, email, password })
+            })
+
+            const json = await response.json();
+
+            if (json.authtoken) {
+                sessionStorage.setItem('auth-token', json.authtoken);
+                sessionStorage.setItem('name', firstName);
+                sessionStorage.setItem('email', json.email);
+                setIsLoggedIn(true);
+                navigate('/app');
+            }
+            else if (json.error) {
+                setShowerr(json.error);
+            }
+
+
+        } catch (e) {
+            console.log("Error fetching details: " + e.message);
+        }
     }
 
 
@@ -62,6 +93,8 @@ function RegisterPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
+
+<div className="text-danger">{showerr}</div>
                         </div>
                         <div className="mb-4">
                             <label htmlFor="password" className="form-label">Password</label>

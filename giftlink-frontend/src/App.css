@@ -187,3 +187,19 @@ body,
   color: white;
   text-decoration: none;
 }
+
+
+.nav-link.register-btn {
+    background-color: #5aba1e; /* A green color for login */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .nav-link.register-btn:hover,
+  .nav-link.register-btn:focus {
+    background-color: #5aba1e; /* A darker green on hover/focus for login */
+    color: white;
+    text-decoration: none;
+  }
