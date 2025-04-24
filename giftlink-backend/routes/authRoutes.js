@@ -1,6 +1,6 @@
 //Step 1 - Task 2: Import necessary packages
 const express = require('express');
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const connectToDatabase = require('../models/db');
@@ -124,6 +124,11 @@ router.put('/update', async (req, res) => {
         // Task 5: find user credentials in database
 
         const existingUser = await collection.findOne({ email });
+        if (!existingUser) {
+            logger.error('User not found');
+            return res.status(404).json({ error: "User not found" });
+        }
+
         existingUser.updatedAt = new Date();
 
         existingUser.firstName = req.body.name;
