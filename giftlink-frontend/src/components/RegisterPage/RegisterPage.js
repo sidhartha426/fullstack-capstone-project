@@ -13,6 +13,8 @@ function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showerr, setShowerr] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     const navigate = useNavigate();
     const { setIsLoggedIn } = useAppContext();
@@ -20,6 +22,7 @@ function RegisterPage() {
     // insert code here to create handleRegister function and include console.log
 
     const handleRegister = async (e) => {
+        setLoading(true);
         try {
             const response = await fetch(`${urlConfig.backendUrl}/api/auth/register`, {
                 method: 'POST',
@@ -45,6 +48,9 @@ function RegisterPage() {
 
         } catch (e) {
             console.log("Error fetching details: " + e.message);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -94,7 +100,7 @@ function RegisterPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
 
-<div className="text-danger">{showerr}</div>
+                            <div className="text-danger">{showerr}</div>
                         </div>
                         <div className="mb-4">
                             <label htmlFor="password" className="form-label">Password</label>
@@ -110,7 +116,17 @@ function RegisterPage() {
 
 
                         {/* insert code here to create a button that performs the `handleRegister` function on click */}
-                        <button className="btn btn-primary w-100 mb-3" onClick={handleRegister}>Register</button>
+                        <button disabled={loading} className="btn btn-primary w-100 mb-3" onClick={handleRegister}>
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Registering your details...
+                                </>
+                            ) : (
+                                'Register'
+                            )}
+
+                        </button>
                         <p className="mt-4 text-center">
                             Already a member? <a href="/app/login" className="text-primary">Login</a>
                         </p>
