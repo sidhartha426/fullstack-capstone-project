@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {urlConfig} from '../../config';
+import { useAppContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 import './LoginPage.css';
 
 function LoginPage() {
@@ -7,12 +11,52 @@ function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showerr, setShowerr] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+    const { setIsLoggedIn } = useAppContext();
+
+    useEffect(() => {
+        if (sessionStorage.getItem('auth-token')) {
+          navigate('/app')
+        }
+      }, [navigate])
 
 
     // insert code here to create handleLogin function and include console.log
     const handleLogin = async (e) => {
-        e.preventDefault();
-        console.log("Login invoked");
+        setLoading(true);
+        try {
+            const response = await fetch(`${urlConfig.backendUrl}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({ email, password })
+            })
+
+            const json = await response.json();
+
+            if (json.authtoken) {
+                sessionStorage.setItem('auth-token', json.authtoken);
+                sessionStorage.setItem('name', json.userName);
+                sessionStorage.setItem('email', json.userEmail);
+                setIsLoggedIn(true);
+                navigate('/app');
+            }
+            else if (json.error) {
+                setShowerr(json.error);
+            }
+
+
+        } catch (e) {
+            console.log("Error fetching details: " + e.message);
+        }
+        finally {
+            setLoading(false);
+        }
+        
     }
 
     return (
@@ -44,11 +88,21 @@ function LoginPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            <div className="text-danger">{showerr}</div>
                         </div>
 
                         {/* insert code here to create a button that performs the `handleLogin` function on click */}
-                        <button className="btn btn-primary w-100 mb-3" onClick={handleLogin}>Login</button>
+                        <button disabled={loading} className="btn btn-primary w-100 mb-3" onClick={handleLogin}>
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Logging In...
+                                </>
+                            ) : (
+                                'Login'
+                            )}
 
+                        </button>
                         <p className="mt-4 text-center">
                             New here? <a href="/app/register" className="text-primary">Register Here</a>
                         </p>

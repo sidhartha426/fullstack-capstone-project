@@ -49,6 +49,11 @@ function DetailsPage() {
         // Task 4: Handle back click
         navigate(-1);
     };
+    const formatDate = (timestamp) => {
+        // Write your code below this line
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleDateString('default', { month: 'long', day: 'numeric', year: 'numeric' });
+    };
 
     //The comments have been hardcoded for this project.
     const comments = [
@@ -103,10 +108,10 @@ function DetailsPage() {
                         {gift.condition}
                     </p>
                     <p><strong>Date Added:</strong>
-                        {gift.dateAdded}
+                        {formatDate(gift.date_added)}
                     </p>
                     <p><strong>Age (Years):</strong>
-                        {gift.age}
+                        {gift.age_years}
                     </p>
                     <p><strong>Description:</strong>
                         {gift.description}
