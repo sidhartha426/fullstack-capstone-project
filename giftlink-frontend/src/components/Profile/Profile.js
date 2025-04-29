@@ -11,7 +11,7 @@ const Profile = () => {
     const [changed, setChanged] = useState("");
     const [editMode, setEditMode] = useState(false);
 
-    const {setUserName} = useAppContext();
+    const { setUserName } = useAppContext();
 
     const navigate = useNavigate();
 

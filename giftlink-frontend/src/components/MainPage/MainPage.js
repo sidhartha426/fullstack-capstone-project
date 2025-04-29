@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { urlConfig } from '../../config';
 
-// const urlConfig = {backendUrl:"https://sidharthasa1-3060.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/"};
 
 function MainPage() {
     const [gifts, setGifts] = useState([]);

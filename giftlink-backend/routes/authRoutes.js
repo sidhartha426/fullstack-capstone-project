@@ -91,12 +91,7 @@ router.post('/login', async (req, res) => {
             logger.error('User not found');
             return res.status(401).json({ "error": "Invalid credentials" });
         }
-
-
-        // Task 5: Fetch user details from database
-        // Task 6: Create JWT authentication if passwords match with user._id as payload
-        res.json({ authtoken, userName, userEmail });
-        // Task 7: Send appropriate message if user not found
+      
     } catch (e) {
         return res.status(500).send('Internal server error');
 
