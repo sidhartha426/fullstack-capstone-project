@@ -1,1 +1,1 @@
-# GiftLink Projet by IBM 
+# GiftLink Project by IBM 
