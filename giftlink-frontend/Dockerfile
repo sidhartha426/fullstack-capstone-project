@@ -20,7 +20,7 @@ FROM node:18-alpine
 WORKDIR /home/node
 COPY ./giftwebsite/index.js .
 COPY --from=server-build  /home/node .
-RUN mkdir bu
+RUN mkdir build
 COPY --from=react-build  /home/node/react/build ./build
 
 
