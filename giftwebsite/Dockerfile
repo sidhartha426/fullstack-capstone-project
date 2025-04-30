@@ -1,20 +1,15 @@
-# Use Node.js LTS version
-FROM node:18.12.1-bullseye-slim
+FROM node:18-alpine AS build
 
-# Set working directory
-WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json files
+WORKDIR /home/node
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install --omit=dev
 
-# Copy application code
+
+FROM node:18-alpine
+
+WORKDIR /home/node
 COPY . .
+COPY --from=build  /home/node .
 
-# Expose port (if needed)
 EXPOSE 9000
-
-# Run the application
 CMD ["npm", "run", "serve"]

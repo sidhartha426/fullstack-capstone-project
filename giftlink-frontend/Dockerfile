@@ -1,23 +1,28 @@
-FROM node:18.12.1-bullseye-slim
+FROM node:18-alpine AS react-build
 
-WORKDIR /usr/src/app/giftwebsite
-
-RUN mkdir build
-COPY ./giftwebsite/index.js .
-COPY ./giftwebsite/package.json .
-RUN npm install --omit=dev
-
-
-WORKDIR /usr/src/app/react
-
+WORKDIR /home/node/react
+RUN mkdir -p ../giftwebsite/build/
 COPY ./giftlink-frontend/package*.json ./
 RUN npm install --omit=dev
 COPY ./giftlink-frontend .
 RUN npm run build
 
-WORKDIR /usr/src/app/giftwebsite
-RUN rm -rf ../react 
+
+FROM node:18-alpine AS server-build
+
+WORKDIR /home/node
+COPY ./giftwebsite/package*.json .
+RUN npm install --omit=dev
+
+
+FROM node:18-alpine
+
+WORKDIR /home/node
+COPY ./giftwebsite/index.js .
+COPY --from=server-build  /home/node .
+RUN mkdir bu
+COPY --from=react-build  /home/node/react/build ./build
+
 
 EXPOSE 9000
-
 CMD ["node", "index.js"]
